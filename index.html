@@ -30,13 +30,6 @@
           <a class="button ghost" href="#method">先看拍攝建議</a>
         </div>
       </div>
-      <div class="hero-visual" aria-hidden="true">
-        <div class="runner-grid"></div>
-        <svg class="runner-line" viewBox="0 0 360 430">
-          <circle cx="194" cy="55" r="27"/><path d="M186 84 160 151 211 224M160 151l-63 75M160 151l64-37M211 224l-83 65-72 86M211 224l43 89 70 52"/><circle cx="97" cy="226" r="7"/><circle cx="128" cy="289" r="7"/><circle cx="254" cy="313" r="7"/>
-        </svg>
-        <div class="metric-orbit"><b>176</b><span>SPM</span></div>
-      </div>
     </section>
 
     <section id="workspace" class="workspace section-shell">
@@ -45,11 +38,11 @@
         <p id="privacyNote">本機處理 · 不上傳影片 · 分析結果可下載</p>
       </div>
 
-      <input id="videoInput" type="file" accept="video/*" hidden />
+      <input id="videoInput" type="file" accept="video/mp4,video/quicktime,video/x-m4v,video/webm,.mp4,.mov,.m4v,.webm" hidden />
       <div id="emptyState" class="empty-state">
         <div class="drop-icon">↗</div>
         <h3>拖放或選擇一段側面跑步影片</h3>
-        <p>建議 8–20 秒、固定鏡位、全身入鏡，左右腳踝都保持可見。</p>
+        <p>支援 MP4、MOV、M4V、WebM。建議 8–20 秒、固定鏡位、全身入鏡，左右腳踝都保持可見。</p>
         <label class="button primary" for="videoInput">匯入影片</label>
       </div>
 
@@ -109,6 +102,6 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script type="module" src="./app.js?v=202611"></script>
+  <script src="./app.bundle.js?v=20261102"></script>
 </body>
 </html>

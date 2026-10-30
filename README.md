@@ -16,7 +16,7 @@ npm test
 npm run serve
 ```
 
-開啟 `http://localhost:4173`。
+開啟 `http://localhost:4173`。也可直接雙擊 `index.html`；已發布的 `app.bundle.js` 支援本機 `file://` 影片匯入。
 
 ## 方法來源與授權
 
