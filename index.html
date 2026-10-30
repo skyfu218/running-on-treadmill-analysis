@@ -6,6 +6,8 @@
   <meta name="theme-color" content="#081521" />
   <meta name="description" content="Running on Treadmill 單鏡頭跑步步態分析工具，提供步頻、步時、接觸時間與觸地膝角推估。" />
   <title>Running on Treadmill｜跑步機步態分析</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" />
   <link rel="stylesheet" href="./styles.css?v=202611" />
 </head>
 <body>
@@ -40,7 +42,7 @@
 
       <input id="videoInput" type="file" accept="video/mp4,video/quicktime,video/x-m4v,video/webm,.mp4,.mov,.m4v,.webm" hidden />
       <div id="emptyState" class="empty-state">
-        <div class="drop-icon">↗</div>
+        <div class="drop-icon"><span class="material-symbols-rounded" aria-hidden="true">upload_file</span></div>
         <h3>拖放或選擇一段側面跑步影片</h3>
         <p>支援 MP4、MOV、M4V、WebM。建議 8–20 秒、固定鏡位、全身入鏡，左右腳踝都保持可見。</p>
         <label class="button primary" for="videoInput">匯入影片</label>
@@ -48,29 +50,39 @@
 
       <div id="analysisLayout" class="analysis-layout" hidden>
         <section class="video-card panel">
-          <div class="panel-bar"><span id="videoName">尚未載入</span><button id="replaceVideo" class="text-button">更換影片</button></div>
+          <div class="panel-bar"><span id="videoName">尚未載入</span><button id="replaceVideo" class="text-button"><span class="material-symbols-rounded" aria-hidden="true">video_file</span>更換影片</button></div>
           <div class="stage-wrap">
             <video id="video" playsinline controls preload="metadata"></video>
             <canvas id="overlayCanvas" aria-label="姿態骨架疊圖"></canvas>
             <div id="stageBadge" class="stage-badge">等待分析</div>
           </div>
+          <div class="video-toolstrip" aria-label="影片檢查工具">
+            <button id="frameBack" class="icon-button" title="上一格" aria-label="上一格"><span class="material-symbols-rounded">skip_previous</span></button>
+            <button id="togglePlayback" class="icon-button featured" title="播放或暫停" aria-label="播放或暫停"><span class="material-symbols-rounded">play_arrow</span></button>
+            <button id="frameForward" class="icon-button" title="下一格" aria-label="下一格"><span class="material-symbols-rounded">skip_next</span></button>
+            <span id="videoTime" class="video-time">00:00 / 00:00</span>
+            <button id="toggleOverlay" class="icon-button active" title="顯示或隱藏骨架" aria-label="顯示或隱藏骨架"><span class="material-symbols-rounded">accessibility_new</span></button>
+          </div>
           <div class="analysis-controls">
             <div class="setting"><label for="viewSide">鏡頭側</label><select id="viewSide"><option value="right">右側面</option><option value="left">左側面</option></select></div>
             <div class="setting"><label for="sampleRate">分析頻率</label><select id="sampleRate"><option value="8">8 fps｜快速</option><option value="10" selected>10 fps｜建議</option><option value="15">15 fps｜精細</option></select></div>
-            <button id="analyzeButton" class="button primary">開始分析</button>
+            <button id="analyzeButton" class="button primary"><span class="material-symbols-rounded" aria-hidden="true">analytics</span>開始分析</button>
           </div>
           <div id="progressWrap" class="progress-wrap" hidden><div class="progress-track"><span id="progressBar"></span></div><p id="progressText">準備姿態模型…</p></div>
         </section>
 
-        <aside class="metrics-panel">
-          <div class="status-card panel"><span class="status-dot"></span><div><small>ANALYSIS STATUS</small><strong id="statusText">影片已就緒</strong></div></div>
-          <div class="metric-grid">
-            <article class="metric-card accent"><small>平均步頻</small><strong id="cadenceValue">—</strong><span>SPM</span></article>
-            <article class="metric-card"><small>平均步時</small><strong id="stepTimeValue">—</strong><span>ms</span></article>
-            <article class="metric-card"><small>平均接觸時間</small><strong id="contactValue">—</strong><span>ms</span></article>
-            <article class="metric-card"><small>觸地膝角</small><strong id="kneeValue">—</strong><span>deg</span></article>
-          </div>
-          <div class="panel quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
+        <aside class="metrics-panel reference-dashboard panel">
+          <div class="status-card"><span class="status-dot"></span><div><small>ANALYSIS STATUS</small><strong id="statusText">影片已就緒</strong></div></div>
+          <section class="cadence-hero">
+            <small>CADENCE</small>
+            <div><strong id="cadenceValue">—</strong><span>spm</span></div>
+            <p><b id="stepCountValue">0</b> steps</p>
+          </section>
+          <section class="mini-viz"><h3>AVG CADENCE OVER TIME</h3><canvas id="cadenceCanvas" width="520" height="170" aria-label="平均步頻趨勢圖"></canvas></section>
+          <section class="mini-viz knee-viz"><h3>AVG KNEE SHAPE AT FOOT STRIKE</h3><canvas id="kneeCanvas" width="520" height="220" aria-label="觸地平均膝型圖"></canvas><p><b id="kneeSideLabel">RIGHT</b> <strong id="kneeValue">—</strong><span> ± <i id="kneeSdValue">—</i>°</span></p></section>
+          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" width="520" height="210" aria-label="左右踝軌跡圖"></canvas><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div></section>
+          <div class="support-metrics"><div><small>平均步時</small><strong id="stepTimeValue">—</strong><span> ms</span></div><div><small>平均接觸時間</small><strong id="contactValue">—</strong><span> ms</span></div></div>
+          <div class="quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
         </aside>
 
         <section class="results panel">
@@ -79,7 +91,7 @@
         </section>
 
         <section class="events panel">
-          <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadCsv" class="button ghost" disabled>CSV</button><button id="downloadJson" class="button ghost" disabled>JSON</button></div></div>
+          <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadCsv" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">table_view</span>CSV</button><button id="downloadJson" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">data_object</span>JSON</button></div></div>
           <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸時間</th><th>膝角</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="7" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
         </section>
       </div>
