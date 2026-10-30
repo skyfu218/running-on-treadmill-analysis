@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#081521" />
+  <meta name="description" content="Running on Treadmill 單鏡頭跑步步態分析工具，提供步頻、步時、接觸時間與觸地膝角推估。" />
+  <title>Running on Treadmill｜跑步機步態分析</title>
+  <link rel="stylesheet" href="./styles.css?v=202611" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="回到頁首">
+      <span class="brand-mark">R</span>
+      <span><strong>RUNNING LAB</strong><small>TREADMILL MOTION ANALYSIS</small></span>
+    </a>
+    <nav aria-label="主要導覽">
+      <a href="#workspace">分析工作區</a><a href="#method">方法與限制</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> BROWSER-BASED 2D GAIT REVIEW</p>
+        <h1>把跑步機側面影片，<br /><em>轉成可複核的步態時間線。</em></h1>
+        <p class="lede">影片只在你的瀏覽器內處理。自動標記左右腳觸地事件，估算步頻、步時、接觸時間與觸地膝角，並保留逐幀人工檢查空間。</p>
+        <div class="hero-actions">
+          <label class="button primary" for="videoInput">選擇跑步影片</label>
+          <a class="button ghost" href="#method">先看拍攝建議</a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="runner-grid"></div>
+        <svg class="runner-line" viewBox="0 0 360 430">
+          <circle cx="194" cy="55" r="27"/><path d="M186 84 160 151 211 224M160 151l-63 75M160 151l64-37M211 224l-83 65-72 86M211 224l43 89 70 52"/><circle cx="97" cy="226" r="7"/><circle cx="128" cy="289" r="7"/><circle cx="254" cy="313" r="7"/>
+        </svg>
+        <div class="metric-orbit"><b>176</b><span>SPM</span></div>
+      </div>
+    </section>
+
+    <section id="workspace" class="workspace section-shell">
+      <div class="section-heading">
+        <div><p class="eyebrow"><span></span> ANALYSIS WORKSPACE</p><h2>跑步分析工作區</h2></div>
+        <p id="privacyNote">本機處理 · 不上傳影片 · 分析結果可下載</p>
+      </div>
+
+      <input id="videoInput" type="file" accept="video/*" hidden />
+      <div id="emptyState" class="empty-state">
+        <div class="drop-icon">↗</div>
+        <h3>拖放或選擇一段側面跑步影片</h3>
+        <p>建議 8–20 秒、固定鏡位、全身入鏡，左右腳踝都保持可見。</p>
+        <label class="button primary" for="videoInput">匯入影片</label>
+      </div>
+
+      <div id="analysisLayout" class="analysis-layout" hidden>
+        <section class="video-card panel">
+          <div class="panel-bar"><span id="videoName">尚未載入</span><button id="replaceVideo" class="text-button">更換影片</button></div>
+          <div class="stage-wrap">
+            <video id="video" playsinline controls preload="metadata"></video>
+            <canvas id="overlayCanvas" aria-label="姿態骨架疊圖"></canvas>
+            <div id="stageBadge" class="stage-badge">等待分析</div>
+          </div>
+          <div class="analysis-controls">
+            <div class="setting"><label for="viewSide">鏡頭側</label><select id="viewSide"><option value="right">右側面</option><option value="left">左側面</option></select></div>
+            <div class="setting"><label for="sampleRate">分析頻率</label><select id="sampleRate"><option value="8">8 fps｜快速</option><option value="10" selected>10 fps｜建議</option><option value="15">15 fps｜精細</option></select></div>
+            <button id="analyzeButton" class="button primary">開始分析</button>
+          </div>
+          <div id="progressWrap" class="progress-wrap" hidden><div class="progress-track"><span id="progressBar"></span></div><p id="progressText">準備姿態模型…</p></div>
+        </section>
+
+        <aside class="metrics-panel">
+          <div class="status-card panel"><span class="status-dot"></span><div><small>ANALYSIS STATUS</small><strong id="statusText">影片已就緒</strong></div></div>
+          <div class="metric-grid">
+            <article class="metric-card accent"><small>平均步頻</small><strong id="cadenceValue">—</strong><span>SPM</span></article>
+            <article class="metric-card"><small>平均步時</small><strong id="stepTimeValue">—</strong><span>ms</span></article>
+            <article class="metric-card"><small>平均接觸時間</small><strong id="contactValue">—</strong><span>ms</span></article>
+            <article class="metric-card"><small>觸地膝角</small><strong id="kneeValue">—</strong><span>deg</span></article>
+          </div>
+          <div class="panel quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
+        </aside>
+
+        <section class="results panel">
+          <div class="panel-title"><div><small>EVENT TIMELINE</small><h3>足部離地高度與觸地事件</h3></div><div class="legend"><span class="left"></span>左腳 <span class="right"></span>右腳 <i></i>觸地</div></div>
+          <div id="chart" class="chart-placeholder"><p>完成分析後，這裡會呈現足部高度訊號與觸地事件。</p></div>
+        </section>
+
+        <section class="events panel">
+          <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadCsv" class="button ghost" disabled>CSV</button><button id="downloadJson" class="button ghost" disabled>JSON</button></div></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸時間</th><th>膝角</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="7" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="method" class="method section-shell">
+      <div class="section-heading"><div><p class="eyebrow"><span></span> METHOD & LIMITS</p><h2>拍攝、計算與判讀邊界</h2></div></div>
+      <div class="method-grid">
+        <article><b>01</b><h3>固定側面鏡位</h3><p>相機與跑步機垂直，完整拍到頭、髖、膝、踝與腳部；避免手持晃動與遮擋。</p></article>
+        <article><b>02</b><h3>足部高度訊號</h3><p>以腿長正規化足部相對站立基準的高度，再從向下穿越閾值的時點辨識觸地。</p></article>
+        <article><b>03</b><h3>同腳步幅計算</h3><p>步頻優先由同腳連續觸地間隔估算，以降低左右腳在側面投影位置不同造成的誤差。</p></article>
+        <article><b>04</b><h3>人工複核優先</h3><p>單鏡頭 2D 姿態會受遮擋、衣著、速度與鏡位影響；結果是訓練觀察值，不是醫療診斷或實驗室金標準。</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="sponsor-lockup"><img src="./assets/tshta-logo.png" alt="臺灣運動健康科技學會 Logo" /><div><small>資助單位</small><strong>臺灣運動健康科技學會</strong><span>Taiwan Society of Sports and Health Technology</span></div></div>
+    <div class="footer-meta"><span>Running Lab · Web Motion Analysis</span><span>版本更新｜2026 年 11 月</span></div>
+  </footer>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.js?v=202611"></script>
+</body>
+</html>
