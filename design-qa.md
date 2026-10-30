@@ -24,6 +24,9 @@
 
 - Local file import: passed with `/private/tmp/reference-runner-qa.mp4`.
 - Pose analysis state: passed; cadence, steps, knee flexion, ankle paths, timing, and quality populated.
+- Playback synchronization: progressive snapshots are derived from the current video time; returning to 0 seconds resets accumulated events and ankle paths, while advancing time increases the included frames/events.
+- Timeline interaction: play, pause, native seeking, previous/next frame, video replay, and event-row jumps all trigger the synchronized dashboard renderer.
+- Layout: portrait video remains in the left column and all synchronized metrics remain in the right column from 761 px upward; narrower phones stack the panels to preserve usability.
 - Unit tests: 2/2 passed.
 - JavaScript syntax and build: passed.
 - Responsive widths: 390, 768, and 1520 px passed without document overflow.

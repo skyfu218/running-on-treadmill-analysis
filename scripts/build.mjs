@@ -7,7 +7,7 @@ await rm(dist,{recursive:true,force:true});
 await mkdir(resolve(dist,'assets'),{recursive:true});
 const core=(await readFile(resolve(root,'analysis-core.js'),'utf8')).replaceAll('export ','');
 const app=(await readFile(resolve(root,'app.js'),'utf8'))
-  .replace(/^import\{analyzeGait\}from'\.\/analysis-core\.js';\n/m,'')
+  .replace(/^import\{[^}]+\}from'\.\/analysis-core\.js';\n/m,'')
   .replace(/^import\{PoseLandmarker,FilesetResolver\}from'([^']+)'[^\n]*\n/,(_,url)=>`let PoseLandmarker,FilesetResolver;\nasync function loadMediaPipe(){if(PoseLandmarker)return;({PoseLandmarker,FilesetResolver}=await import('${url}'))}\n`)
   .replace('async function ensurePose(){if(pose)return pose;','async function ensurePose(){if(pose)return pose;await loadMediaPipe();');
 const bundle=`(()=>{\n${core}\n${app}\n})();\n`;
