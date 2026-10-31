@@ -14,4 +14,6 @@ const bundle=`(()=>{\n${core}\n${app}\n})();\n`;
 await writeFile(resolve(root,'app.bundle.js'),bundle);
 for(const file of['index.html','styles.css','app.bundle.js'])await cp(resolve(root,file),resolve(dist,file));
 await cp(resolve(root,'assets/tshta-logo.png'),resolve(dist,'assets/tshta-logo.png'));
-console.log('Built standalone bundle and dist with 4 public files.');
+await cp(resolve(root,'node_modules/html2canvas/dist/html2canvas.min.js'),resolve(dist,'assets/html2canvas.min.js'));
+await cp(resolve(root,'node_modules/jspdf/dist/jspdf.umd.min.js'),resolve(dist,'assets/jspdf.umd.min.js'));
+console.log('Built standalone bundle and dist with 6 public files.');
