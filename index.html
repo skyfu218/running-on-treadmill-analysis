@@ -65,6 +65,8 @@
           </div>
           <div class="analysis-controls">
             <div class="setting"><label for="viewSide">鏡頭側</label><select id="viewSide"><option value="right">右側面</option><option value="left">左側面</option></select></div>
+            <div class="setting"><label for="runDirection">跑動方向</label><select id="runDirection"><option value="1">畫面向右</option><option value="-1">畫面向左</option></select></div>
+            <div class="setting"><label for="athleteHeight">身高校正</label><div class="unit-input"><input id="athleteHeight" type="number" min="120" max="230" step="0.5" inputmode="decimal" placeholder="例如 175" /><span>cm</span></div></div>
             <div class="setting"><label for="sampleRate">分析頻率</label><select id="sampleRate"><option value="8">8 fps｜快速</option><option value="10" selected>10 fps｜建議</option><option value="15">15 fps｜精細</option></select></div>
             <button id="analyzeButton" class="button primary"><span class="material-symbols-rounded" aria-hidden="true">analytics</span>開始分析</button>
           </div>
@@ -79,8 +81,9 @@
             <p><b id="stepCountValue">0</b> steps</p>
           </section>
           <section class="mini-viz"><h3>AVG CADENCE OVER TIME</h3><canvas id="cadenceCanvas" width="520" height="170" aria-label="平均步頻趨勢圖"></canvas></section>
-          <section class="mini-viz knee-viz"><h3>AVG KNEE SHAPE AT FOOT STRIKE</h3><canvas id="kneeCanvas" width="520" height="220" aria-label="觸地平均膝型圖"></canvas><p><b id="kneeSideLabel">RIGHT</b> <strong id="kneeValue">—</strong><span> ± <i id="kneeSdValue">—</i>°</span></p></section>
-          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" width="520" height="210" aria-label="左右踝軌跡圖"></canvas><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div></section>
+          <section class="mini-viz knee-viz"><h3>HIP & KNEE RANGE BY STEP</h3><canvas id="kneeCanvas" width="520" height="170" aria-label="目前髖膝關節型態圖"></canvas><p><b id="kneeSideLabel">RIGHT</b> <strong id="kneeValue">—</strong><span> ± <i id="kneeSdValue">—</i>°</span></p><div id="jointComparison" class="joint-comparison" aria-label="左右髖膝關節活動範圍比較"><p>完成分析後顯示左右側比較。</p></div></section>
+          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" width="520" height="210" aria-label="左右踝軌跡圖"></canvas><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div><div id="ankleMetrics" class="trajectory-metrics"><p>輸入身高後顯示公分數。</p></div></section>
+          <section class="mini-viz com-viz"><h3>CENTER OF MASS VERTICAL OSCILLATION</h3><canvas id="comCanvas" width="520" height="170" aria-label="身體質心垂直晃動軌跡圖"></canvas><div id="comMetrics" class="trajectory-metrics"><p>肚臍位置為單鏡頭質心代理點。</p></div></section>
           <div class="support-metrics"><div><small>平均步時</small><strong id="stepTimeValue">—</strong><span> ms</span></div><div><small>平均接觸時間</small><strong id="contactValue">—</strong><span> ms</span></div></div>
           <div class="quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
         </aside>
@@ -92,7 +95,7 @@
 
         <section class="events panel">
           <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadCsv" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">table_view</span>CSV</button><button id="downloadJson" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">data_object</span>JSON</button></div></div>
-          <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸時間</th><th>膝角</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="7" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸</th><th>髖屈曲</th><th>髖伸展</th><th>膝屈曲</th><th>膝伸展</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="10" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
         </section>
       </div>
     </section>
@@ -114,6 +117,6 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.bundle.js?v=20261104"></script>
+  <script src="./app.bundle.js?v=20261105"></script>
 </body>
 </html>
