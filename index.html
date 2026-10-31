@@ -8,7 +8,7 @@
   <title>Running on Treadmill｜跑步機步態分析</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" />
-  <link rel="stylesheet" href="./styles.css?v=20261104" />
+  <link rel="stylesheet" href="./styles.css?v=20261106" />
 </head>
 <body>
   <header class="topbar">
@@ -67,7 +67,7 @@
             <div class="setting"><label for="viewSide">鏡頭側</label><select id="viewSide"><option value="right">右側面</option><option value="left">左側面</option></select></div>
             <div class="setting"><label for="runDirection">跑動方向</label><select id="runDirection"><option value="1">畫面向右</option><option value="-1">畫面向左</option></select></div>
             <div class="setting"><label for="athleteHeight">身高校正</label><div class="unit-input"><input id="athleteHeight" type="number" min="120" max="230" step="0.5" inputmode="decimal" placeholder="例如 175" /><span>cm</span></div></div>
-            <div class="setting"><label for="sampleRate">分析頻率</label><select id="sampleRate"><option value="8">8 fps｜快速</option><option value="10" selected>10 fps｜建議</option><option value="15">15 fps｜精細</option></select></div>
+            <div class="setting"><label for="sampleRate">分析頻率</label><select id="sampleRate"><option value="auto" selected>跟隨影片 FPS｜自動</option><option value="15">15 fps｜省時</option><option value="30">30 fps｜精細</option><option value="60">60 fps｜高幀率</option></select></div>
             <button id="analyzeButton" class="button primary"><span class="material-symbols-rounded" aria-hidden="true">analytics</span>開始分析</button>
           </div>
           <div id="progressWrap" class="progress-wrap" hidden><div class="progress-track"><span id="progressBar"></span></div><p id="progressText">準備姿態模型…</p></div>
@@ -80,22 +80,23 @@
             <div><strong id="cadenceValue">—</strong><span>spm</span></div>
             <p><b id="stepCountValue">0</b> steps</p>
           </section>
-          <section class="mini-viz"><h3>AVG CADENCE OVER TIME</h3><canvas id="cadenceCanvas" width="520" height="170" aria-label="平均步頻趨勢圖"></canvas></section>
-          <section class="mini-viz knee-viz"><h3>HIP & KNEE RANGE BY STEP</h3><canvas id="kneeCanvas" width="520" height="170" aria-label="目前髖膝關節型態圖"></canvas><p><b id="kneeSideLabel">RIGHT</b> <strong id="kneeValue">—</strong><span> ± <i id="kneeSdValue">—</i>°</span></p><div id="jointComparison" class="joint-comparison" aria-label="左右髖膝關節活動範圍比較"><p>完成分析後顯示左右側比較。</p></div></section>
-          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" width="520" height="210" aria-label="左右踝軌跡圖"></canvas><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div><div id="ankleMetrics" class="trajectory-metrics"><p>輸入身高後顯示公分數。</p></div></section>
-          <section class="mini-viz com-viz"><h3>CENTER OF MASS VERTICAL OSCILLATION</h3><canvas id="comCanvas" width="520" height="170" aria-label="身體質心垂直晃動軌跡圖"></canvas><div id="comMetrics" class="trajectory-metrics"><p>肚臍位置為單鏡頭質心代理點。</p></div></section>
+          <section class="mini-viz"><h3>CADENCE TIMELINE</h3><canvas id="cadenceCanvas" class="interactive-timeline" width="780" height="170" aria-label="步頻時間線，可點擊跳至時間"></canvas><input id="cadenceTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="步頻時間軸" /></section>
+          <section class="mini-viz knee-viz"><h3>HIP & KNEE RANGE BY STEP</h3><canvas id="kneeCanvas" width="780" height="190" aria-label="左右髖膝關節角度圖"></canvas><div id="jointComparison" class="joint-comparison compact" aria-label="左右髖膝關節活動範圍摘要"><p>圖像將直接標示左右髖關節屈曲／伸展及膝屈曲角度。</p></div></section>
+          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" class="interactive-timeline" width="780" height="250" aria-label="左右踝軌跡圖，可點擊跳至時間"></canvas><input id="ankleTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="踝軌跡時間軸" /><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div><div id="ankleMetrics" class="trajectory-metrics"><p>輸入身高後顯示公分數。</p></div></section>
+          <section class="mini-viz com-viz"><h3>CENTER OF MASS VERTICAL OSCILLATION</h3><canvas id="comCanvas" class="interactive-timeline" width="780" height="190" aria-label="身體質心垂直晃動時間線，可點擊跳至時間"></canvas><input id="comTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="質心時間軸" /><div id="comMetrics" class="trajectory-metrics"><p>肚臍位置為單鏡頭質心代理點。</p></div></section>
           <div class="support-metrics"><div><small>平均步時</small><strong id="stepTimeValue">—</strong><span> ms</span></div><div><small>平均接觸時間</small><strong id="contactValue">—</strong><span> ms</span></div></div>
           <div class="quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
         </aside>
 
         <section class="results panel">
           <div class="panel-title"><div><small>EVENT TIMELINE</small><h3>足部離地高度與觸地事件</h3></div><div class="legend"><span class="left"></span>左腳 <span class="right"></span>右腳 <i></i>觸地</div></div>
-          <div id="chart" class="chart-placeholder"><p>完成分析後，這裡會呈現足部高度訊號與觸地事件。</p></div>
+          <div id="chart" class="chart-placeholder interactive-timeline"><p>完成分析後，這裡會呈現足部高度訊號與觸地事件。</p></div><input id="eventTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="觸地事件時間軸" />
         </section>
 
         <section class="events panel">
-          <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadCsv" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">table_view</span>CSV</button><button id="downloadJson" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">data_object</span>JSON</button></div></div>
+          <div class="panel-title"><div><small>STRIKE REVIEW</small><h3>觸地事件明細</h3></div><div class="export-actions"><button id="downloadReport" class="button primary" disabled><span class="material-symbols-rounded" aria-hidden="true">lab_profile</span>檢測報告</button><button id="shareReport" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">share</span>分享／LINE</button><button id="downloadCsv" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">table_view</span>Raw CSV</button><button id="downloadJson" class="button ghost" disabled><span class="material-symbols-rounded" aria-hidden="true">data_object</span>JSON</button></div></div>
           <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸</th><th>髖屈曲</th><th>髖伸展</th><th>膝屈曲</th><th>膝伸展</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="10" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
+          <details class="raw-data"><summary>顯示每個取樣時間點的 Raw Data</summary><div class="table-wrap"><table><thead><tr><th>時間</th><th>左足高度</th><th>右足高度</th><th>左接觸</th><th>右接觸</th><th>左髖</th><th>右髖</th><th>左膝</th><th>右膝</th><th>COM Y</th></tr></thead><tbody id="rawBody"><tr><td colspan="10" class="table-empty">尚無 Raw Data</td></tr></tbody></table></div></details>
         </section>
       </div>
     </section>
@@ -117,6 +118,6 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.bundle.js?v=20261105"></script>
+  <script src="./app.bundle.js?v=20261106"></script>
 </body>
 </html>
