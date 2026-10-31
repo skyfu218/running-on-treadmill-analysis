@@ -8,7 +8,7 @@
   <title>Running on Treadmill｜跑步機步態分析</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" />
-  <link rel="stylesheet" href="./styles.css?v=20261110" />
+  <link rel="stylesheet" href="./styles.css?v=20261111" />
 </head>
 <body>
   <header class="topbar">
@@ -76,6 +76,8 @@
         <div class="data-column">
         <aside class="metrics-panel reference-dashboard panel">
           <div class="status-card"><span class="status-dot"></span><div><small>ANALYSIS STATUS</small><strong id="statusText">影片已就緒</strong></div></div>
+          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" class="interactive-timeline" width="780" height="250" aria-label="左右踝軌跡圖，可點擊跳至時間"></canvas><input id="ankleTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="踝軌跡時間軸" /><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div><div id="ankleMetrics" class="trajectory-metrics"><p>輸入身高後顯示公分數。</p></div></section>
+          <section class="mini-viz com-viz"><h3>CENTER OF MASS VERTICAL OSCILLATION</h3><canvas id="comCanvas" class="interactive-timeline" width="780" height="190" aria-label="身體質心垂直晃動時間線，可點擊跳至時間"></canvas><input id="comTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="質心時間軸" /><div id="comMetrics" class="trajectory-metrics"><p>肚臍位置為單鏡頭質心代理點。</p></div></section>
           <section class="cadence-hero">
             <small>CADENCE</small>
             <div><strong id="cadenceValue">—</strong><span>spm</span></div>
@@ -83,8 +85,6 @@
           </section>
           <section class="mini-viz"><h3>CADENCE TIMELINE</h3><canvas id="cadenceCanvas" class="interactive-timeline" width="780" height="170" aria-label="步頻時間線，可點擊跳至時間"></canvas><input id="cadenceTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="步頻時間軸" /></section>
           <section class="mini-viz knee-viz"><h3>HIP · KNEE · ANKLE ANGLES</h3><canvas id="kneeCanvas" width="780" height="230" aria-label="固定髖點的左右髖、膝與踝關節角度圖"></canvas></section>
-          <section class="mini-viz ankle-viz"><h3>ANKLE PATH VISUALIZATION</h3><canvas id="ankleCanvas" class="interactive-timeline" width="780" height="250" aria-label="左右踝軌跡圖，可點擊跳至時間"></canvas><input id="ankleTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="踝軌跡時間軸" /><div class="path-legend"><span class="left-dot"></span>LEFT <span class="right-dot"></span>RIGHT</div><div id="ankleMetrics" class="trajectory-metrics"><p>輸入身高後顯示公分數。</p></div></section>
-          <section class="mini-viz com-viz"><h3>CENTER OF MASS VERTICAL OSCILLATION</h3><canvas id="comCanvas" class="interactive-timeline" width="780" height="190" aria-label="身體質心垂直晃動時間線，可點擊跳至時間"></canvas><input id="comTimeline" class="sync-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="質心時間軸" /><div id="comMetrics" class="trajectory-metrics"><p>肚臍位置為單鏡頭質心代理點。</p></div></section>
           <div class="support-metrics"><div><small>平均步時</small><strong id="stepTimeValue">—</strong><span> ms</span></div><div><small>平均接觸時間</small><strong id="contactValue">—</strong><span> ms</span></div></div>
           <div class="quality-panel"><div><small>資料品質</small><strong id="qualityLabel">等待分析</strong></div><div class="quality-bar"><span id="qualityBar"></span></div><p id="qualityText">匯入影片後開始分析。</p></div>
         </aside>
@@ -121,6 +121,6 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.bundle.js?v=20261110"></script>
+  <script src="./app.bundle.js?v=20261111"></script>
 </body>
 </html>
