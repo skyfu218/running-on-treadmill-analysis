@@ -8,7 +8,7 @@
   <title>Running on Treadmill｜跑步機步態分析</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" />
-  <link rel="stylesheet" href="./styles.css?v=20261108" />
+  <link rel="stylesheet" href="./styles.css?v=20261109" />
 </head>
 <body>
   <header class="topbar">
@@ -73,6 +73,7 @@
           <div id="progressWrap" class="progress-wrap" hidden><div class="progress-track"><span id="progressBar"></span></div><p id="progressText">準備姿態模型…</p></div>
         </section>
 
+        <div class="data-column">
         <aside class="metrics-panel reference-dashboard panel">
           <div class="status-card"><span class="status-dot"></span><div><small>ANALYSIS STATUS</small><strong id="statusText">影片已就緒</strong></div></div>
           <section class="cadence-hero">
@@ -98,6 +99,7 @@
           <div class="table-wrap"><table><thead><tr><th>#</th><th>時間</th><th>腳別</th><th>步時</th><th>接觸</th><th>髖屈曲</th><th>髖伸展</th><th>膝屈曲</th><th>踝背屈</th><th>踝蹠屈</th><th>檢查</th></tr></thead><tbody id="eventsBody"><tr><td colspan="11" class="table-empty">尚無分析事件</td></tr></tbody></table></div>
           <details class="raw-data"><summary>顯示每個取樣時間點的 Raw Data</summary><div class="table-wrap"><table><thead><tr><th>時間</th><th>左足高度</th><th>右足高度</th><th>左接觸</th><th>右接觸</th><th>左髖</th><th>右髖</th><th>左膝</th><th>右膝</th><th>左踝背／蹠</th><th>右踝背／蹠</th><th>COM Y</th></tr></thead><tbody id="rawBody"><tr><td colspan="12" class="table-empty">尚無 Raw Data</td></tr></tbody></table></div></details>
         </section>
+        </div>
       </div>
     </section>
 
@@ -118,6 +120,6 @@
   </footer>
 
   <div id="toast" role="status" aria-live="polite"></div>
-  <script src="./app.bundle.js?v=20261108"></script>
+  <script src="./app.bundle.js?v=20261109"></script>
 </body>
 </html>
